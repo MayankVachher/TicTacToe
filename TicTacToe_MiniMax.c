@@ -80,7 +80,6 @@ int board_full(int board[3][3]) {
 
 int valid_move(int pos, int player) {
 	if(pos > 9 || pos < 1) {
-		printf("Invalid move! Try Again.\n");
 		return 0;
 	}
 	int play_i, play_j;
@@ -104,12 +103,20 @@ int valid_move(int pos, int player) {
 
 void player_move() {
 	int pos, valid = 1;
+	int ch, flag = 0; // for invalid characters in scanf
 	do {
-		if(!valid){
+		if(!valid && !flag){
 			printf("Invalid move! Try Again.\n");
 		}
 		printf("\n\nEnter position you want to play: ");
-		scanf("%d", &pos);
+		if(scanf("%d", &pos) <= 0) {
+			valid = 1;
+			while ((ch = getchar()) != '\n' && ch != EOF);
+			printf("Weird character encountered!!!\n");
+			flag = 1;
+			continue;
+		}
+		flag = 0;
 	}while(!(valid = valid_move(pos, 1)));
 }
 
